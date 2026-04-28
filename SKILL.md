@@ -1,11 +1,11 @@
 ---
 name: cookidoo-recipe-converter
-description: Convert any web recipe URL into a Cookidoo created recipe for the Thermomix TM7 by driving the Cookidoo web UI in a real browser. Use this skill whenever the user mentions Cookidoo, Thermomix, TM7, the Thermomix app, or asks to convert, scrape, import, add, or save a recipe to their Thermomix or Cookidoo account, even when they only paste a recipe URL alongside one of those product names without naming this skill. Fires on phrases like "convert this recipe to my Thermomix", "add this to Cookidoo", "create a TM7 recipe from this URL", "scrape this recipe into Cookidoo", "make this a Thermomix recipe", and any pasted recipe URL paired with Cookidoo, Thermomix, or TM7 in the same message. Operates in en-US locale, Fahrenheit, US-imperial measures preserved verbatim from the source, and drives the live Cookidoo web app via DOM tooling and real browser clicks (no API).
+description: Convert any web recipe URL into a Cookidoo created recipe for any Thermomix model (TM5, TM6, TM7) by driving the Cookidoo web UI in a real browser. Use this skill whenever the user mentions Cookidoo, Thermomix, TM5, TM6, TM7, the Thermomix app, or asks to convert, scrape, import, add, or save a recipe to their Thermomix or Cookidoo account, even when they only paste a recipe URL alongside one of those product names without naming this skill. Fires on phrases like "convert this recipe to my Thermomix", "add this to Cookidoo", "create a TM6 recipe from this URL", "make this a TM7 recipe", "scrape this recipe into Cookidoo", and any pasted recipe URL paired with Cookidoo, Thermomix, TM5, TM6, or TM7 in the same message. Operates in en-US locale, Fahrenheit, US-imperial measures preserved verbatim from the source, and drives the live Cookidoo web app via DOM tooling and real browser clicks (no API).
 ---
 
-# Cookidoo TM7 Recipe Converter
+# Cookidoo Thermomix Recipe Converter
 
-You are converting a web recipe into a Cookidoo created-recipe for the Thermomix TM7 (en-US locale, Fahrenheit, US-imperial measures preserved as written in the source).
+You are converting a web recipe into a Cookidoo created-recipe for the user's Thermomix (en-US locale, Fahrenheit, US-imperial measures preserved as written in the source). The DOM-level workflow below is verified against the en-US Cookidoo web app, which is shared across Thermomix models (TM5, TM6, TM7). Cooking settings (time, temperature, speed, Varoma) are entered using the en-US Cookidoo dropdown, which is the same regardless of which Thermomix the user owns.
 
 ## PHASE 1 — PLAN (do not touch the browser yet)
 

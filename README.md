@@ -1,6 +1,6 @@
-# Cookidoo TM7 Recipe Converter
+# Cookidoo Thermomix Recipe Converter
 
-A Claude Skill (and URL-fetchable playbook) that converts an arbitrary web recipe into a Cookidoo "created recipe" for the Thermomix TM7. It drives the live Cookidoo web app in a real browser, in en-US locale, with Fahrenheit temperatures and US-imperial measures preserved verbatim from the source.
+A Claude Skill (and URL-fetchable playbook) that converts an arbitrary web recipe into a Cookidoo "created recipe" for any Thermomix model (TM5, TM6, TM7). It drives the live Cookidoo web app in a real browser, in en-US locale, with Fahrenheit temperatures and US-imperial measures preserved verbatim from the source. The temperature, speed, and Varoma settings are entered via the en-US Cookidoo dropdowns, which are shared across TM5, TM6, and TM7.
 
 ## Three ways to use it
 
@@ -13,9 +13,10 @@ Works in Claude Desktop, Claude Code, Cowork, and Claude.ai (where Skills are su
 3. In any chat say something like:
    - "Convert this recipe to Cookidoo: `<URL>`"
    - "Add this Thermomix recipe: `<URL>`"
-   - "Make a TM7 recipe from `<URL>`"
+   - "Make a TM6 recipe from `<URL>`"
+   - "Create a TM7 recipe from `<URL>`"
 
-The Skill triggers automatically on Cookidoo / Thermomix / TM7 phrasing, plus a recipe URL.
+The Skill triggers automatically on Cookidoo / Thermomix / TM5 / TM6 / TM7 phrasing, plus a recipe URL.
 
 ### 2. As a fetchable playbook (Claude Chrome Extension or any session)
 
@@ -51,7 +52,7 @@ What follows is the full instruction set Claude executes. It is also the body of
 
 ---
 
-You are converting a web recipe into a Cookidoo created-recipe for the Thermomix TM7 (en-US locale, Fahrenheit, US-imperial measures preserved as written in the source).
+You are converting a web recipe into a Cookidoo created-recipe for the user's Thermomix (en-US locale, Fahrenheit, US-imperial measures preserved as written in the source). The DOM-level workflow below is verified against the en-US Cookidoo web app, which is shared across Thermomix models (TM5, TM6, TM7). Cooking settings (time, temperature, speed, Varoma) are entered using the en-US Cookidoo dropdown, which is the same regardless of which Thermomix the user owns.
 
 ## PHASE 1 — PLAN (do not touch the browser yet)
 
