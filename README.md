@@ -1,39 +1,47 @@
 # Cookidoo Thermomix Recipe Converter
 
-A Claude Skill (and URL-fetchable playbook) that converts an arbitrary web recipe into a Cookidoo "created recipe" for any Thermomix model (TM5, TM6, TM7). It drives the live Cookidoo web app in a real browser, in en-US locale, with Fahrenheit temperatures and US-imperial measures preserved verbatim from the source. The temperature, speed, and Varoma settings are entered via the en-US Cookidoo dropdowns, which are shared across TM5, TM6, and TM7.
+A fetchable playbook for the **Claude Chrome Extension** that converts an arbitrary web recipe into a Cookidoo "created recipe" for any Thermomix model (TM5, TM6, TM7). It drives the live Cookidoo web app in your real browser tab, in en-US locale, with Fahrenheit temperatures and US-imperial measures preserved verbatim from the source. The temperature, speed, and Varoma settings are entered via the en-US Cookidoo dropdowns, which are shared across TM5, TM6, and TM7.
 
-## Three ways to use it
+## What this is (and isn't)
 
-### 1. As an installed Skill
+The playbook calls browser-automation tools (`computer.left_click`, `computer.type`, `javascript_tool`, `get_page_text`, `read_page`, `find`) that are part of the **Claude Chrome Extension**. It does not run in Claude Desktop, Cowork, Claude Code, or Claude.ai web, because none of those clients drive a real browser tab the way this workflow needs. If a future client gains equivalent tools, the same playbook should work there too without changes.
 
-Works in Claude Desktop, Claude Code, Cowork, and Claude.ai (where Skills are supported).
+## Two ways to use it
 
-1. Download `cookidoo-recipe-converter.skill` from this repo.
-2. Drag it into Claude Desktop, or install it however your client supports.
-3. In any chat say something like:
-   - "Convert this recipe to Cookidoo: `<URL>`"
-   - "Add this Thermomix recipe: `<URL>`"
-   - "Make a TM6 recipe from `<URL>`"
-   - "Create a TM7 recipe from `<URL>`"
+### Option A: One-shot URL fetch (no setup)
 
-The Skill triggers automatically on Cookidoo / Thermomix / TM5 / TM6 / TM7 phrasing, plus a recipe URL.
-
-### 2. As a fetchable playbook (Claude Chrome Extension or any session)
-
-The Claude Chrome Extension does not currently auto-load Skills, so this README doubles as a self-contained playbook. In any Claude session that can fetch URLs, say:
+In the Claude Chrome Extension, open a new chat and say:
 
 > Fetch the playbook at `https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md` and use it to convert this recipe: `<recipe URL>`
 
-Claude reads this README, then executes the playbook against your active Cookidoo tab.
+Claude fetches this README, follows the playbook below, and drives the Cookidoo tab to create the recipe. You will be asked to log into Cookidoo if you are not already.
 
-### 3. As a Chrome Extension Shortcut (personal, fastest)
+This is the simplest way to try it once. For repeat use, set up the shortcut below (Option B) so you do not have to paste the URL every time.
 
-If you use the Claude Chrome Extension a lot:
+### Option B: `/cookidoo` shortcut (recommended for repeat use)
 
-1. Open the extension's Shortcuts settings.
-2. Paste the entire body of [Playbook](#playbook) below as the shortcut content.
-3. Name it `cookidoo`.
-4. In any Chrome tab, type `/cookidoo <recipe URL>` and the playbook runs.
+The Claude Chrome Extension has a Shortcuts feature: you give a slash command a body of instructions, and typing `/<name> <args>` in any chat expands to those instructions. Setup:
+
+1. **Open the extension popup.** Click the Claude Chrome Extension icon in your Chrome toolbar.
+2. **Open Settings.** Look for the gear or settings menu inside the popup. Find the section labeled **Shortcuts** (sometimes "Custom Shortcuts" or "Slash Commands"). The exact label and location can change between extension versions; if you do not see it, check the extension's documentation or its options page.
+3. **Create a new shortcut.**
+   - **Name:** `cookidoo`
+   - **Body / instructions:** copy the entire **Playbook** section from this README (everything from the `---` separator down to the bottom of the page) and paste it as the shortcut content. You can copy from the rendered README or the [raw view](https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md).
+   - **Argument handling:** if the shortcut form has an "accepts arguments" toggle, enable it. The user's input after `/cookidoo` is the recipe URL the playbook should fetch.
+4. **Save the shortcut.**
+5. **Use it.** In any Chrome tab (Cookidoo or otherwise) open the Claude Extension and type:
+
+   ```
+   /cookidoo https://www.example.com/some-recipe
+   ```
+
+   Claude expands the shortcut, reads the recipe, plans the conversion, asks you to approve the plan, then drives the Cookidoo tab.
+
+If the shortcut UI does not currently support arguments, append the URL manually after the expansion: type `/cookidoo`, let it expand, then add a line like `Recipe to convert: <URL>` before sending.
+
+### Updating to the latest playbook
+
+When this repo is updated, Option A (URL fetch) always pulls the latest version automatically. Option B (saved shortcut) is a snapshot; re-paste the playbook into the shortcut to refresh.
 
 ## Locale note
 
@@ -41,14 +49,15 @@ This converter is hard-coded for **en-US**. Temperatures are entered in **Fahren
 
 ## Limitations
 
-- The Claude Chrome Extension does not load Skills automatically (verified as of 2026). The fetchable-playbook workaround in option 2 above is the recommended way to use this from the Chrome Extension.
+- Runs only in the Claude Chrome Extension (or any future client that exposes the same `computer.*` / `javascript_tool` / `get_page_text` / `read_page` / `find` tools against a real browser tab).
 - The Cookidoo en-US Fahrenheit dropdown caps at **320°F**. Source temperatures of 356°F / 392°F (180°C / 200°C) cannot be entered; they snap to 320°F max and the intended value is noted in the prose for the cook.
-- The skill never modifies title (after creation), times, portions, image, Tips, or Devices and Accessories. It only writes ingredients, step prose, inline ingredient links, and end-of-step TTS (cooking-setting) badges.
+- The playbook never modifies title (after creation), times, portions, image, Tips, or Devices and Accessories. It only writes ingredients, step prose, inline ingredient links, and end-of-step TTS (cooking-setting) badges.
 - TTS badges only persist at the end of a step's prose. Steps that semantically need a mid-action cooking setting are split into two steps during planning.
+- You must be logged into Cookidoo in the active Chrome tab before the playbook can navigate the created-recipes pages.
 
 ## Playbook
 
-What follows is the full instruction set Claude executes. It is also the body of the installed Skill.
+What follows is the full instruction set Claude executes. Copy everything below the separator into your `/cookidoo` shortcut body (or rely on Option A's URL fetch).
 
 ---
 
