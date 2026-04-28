@@ -1,51 +1,87 @@
 # Cookidoo Thermomix Recipe Converter
 
-A fetchable playbook for the **Claude Chrome Extension** that converts an arbitrary web recipe into a Cookidoo "created recipe" for any Thermomix model (TM5, TM6, TM7). It drives the live Cookidoo web app in your real browser tab, in en-US locale, with Fahrenheit temperatures and US-imperial measures preserved verbatim from the source. The temperature, speed, and Varoma settings are entered via the en-US Cookidoo dropdowns, which are shared across TM5, TM6, and TM7.
+**Convert any web recipe into a Cookidoo created recipe for your Thermomix, in one chat message.**
 
-## What this is (and isn't)
+Paste a URL, approve the plan, and Claude drives the Cookidoo web app in your browser, creating the recipe end-to-end. Works for any Thermomix on Cookidoo (TM5, TM6, TM7), en-US locale.
 
-The playbook calls browser-automation tools (`computer.left_click`, `computer.type`, `javascript_tool`, `get_page_text`, `read_page`, `find`) that are part of the **Claude Chrome Extension**. It does not run in Claude Desktop, Cowork, Claude Code, or Claude.ai web, because none of those clients drive a real browser tab the way this workflow needs. If a future client gains equivalent tools, the same playbook should work there too without changes.
+## See it in action
+
+In the Claude Chrome Extension on any tab, send this:
+
+```
+Fetch the playbook at https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md
+and use it to convert this recipe: https://www.bonappetit.com/recipe/...
+```
+
+Claude reads the recipe, then comes back with a plan that looks like this:
+
+```
+Title: Lemon Butter Sole
+Times/portions (read-only): 25 min total / 4 servings
+Ingredients (in order):
+  500 g water
+  2 sole fillets, skin on
+  1 lemon, thinly sliced
+  2 Tbsp extra-virgin olive oil
+  ...
+Steps:
+  Place water and lemon slices in mixing bowl. Arrange fillets skin-side
+  down in Varoma tray.       [links: water, lemon, fillets]  [TTS: 12 min/Varoma/speed 1]
+  Drizzle with olive oil and season with salt and pepper.
+                              [links: olive oil, salt, pepper]
+  ...
+```
+
+Reply `approved`, and Claude switches to your Cookidoo tab and creates the recipe. You watch it click through the UI, type ingredients, link them inline, and stamp the cooking-setting badges.
+
+## What you need
+
+1. **A Cookidoo subscription**, logged into `https://cookidoo.thermomix.com/created-recipes/en-US` in a Chrome tab. Works for any Thermomix model: TM5, TM6, TM7. The cooking-setting dropdowns are the same across models.
+2. **The Claude Chrome Extension.** This is a browser extension from Anthropic that lets Claude read and act on your current Chrome tab: clicking, typing, running JavaScript, reading the rendered page. It is the runtime that makes this playbook work. Claude Desktop, Claude Code, Cowork, and Claude.ai web do not currently have tab-driving tools, so the playbook only runs in the extension.
+
+> If you do not have the Claude Chrome Extension yet: install it from the Chrome Web Store (search for "Claude" by Anthropic) and sign in with your Claude account.
 
 ## Two ways to use it
 
-### Option A: One-shot URL fetch (no setup)
+### Option A: paste once (no setup)
 
-In the Claude Chrome Extension, open a new chat and say:
+Use the message from the example above. Replace the recipe URL with whatever you want to convert. Good for trying it out or for one-off conversions.
 
-> Fetch the playbook at `https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md` and use it to convert this recipe: `<recipe URL>`
+```
+Fetch the playbook at https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md
+and use it to convert this recipe: <recipe URL>
+```
 
-Claude fetches this README, follows the playbook below, and drives the Cookidoo tab to create the recipe. You will be asked to log into Cookidoo if you are not already.
+Claude fetches this README each time, so you always get the latest playbook.
 
-This is the simplest way to try it once. For repeat use, set up the shortcut below (Option B) so you do not have to paste the URL every time.
+### Option B: save as `/cookidoo` shortcut (recommended for repeat use)
 
-### Option B: `/cookidoo` shortcut (recommended for repeat use)
+The Claude Chrome Extension has a Shortcuts feature: you give a slash command a body of instructions, and typing `/<name> <args>` expands to those instructions. After setup, you just type:
 
-The Claude Chrome Extension has a Shortcuts feature: you give a slash command a body of instructions, and typing `/<name> <args>` in any chat expands to those instructions. Setup:
+```
+/cookidoo <recipe URL>
+```
+
+and the conversion runs.
+
+**Setup:**
 
 1. **Open the extension popup.** Click the Claude Chrome Extension icon in your Chrome toolbar.
-2. **Open Settings.** Look for the gear or settings menu inside the popup. Find the section labeled **Shortcuts** (sometimes "Custom Shortcuts" or "Slash Commands"). The exact label and location can change between extension versions; if you do not see it, check the extension's documentation or its options page.
-3. **Create a new shortcut.**
+2. **Open Settings.** Look for the gear or settings menu. Find the section labeled **Shortcuts** (sometimes "Custom Shortcuts" or "Slash Commands"). The exact label can shift between extension versions; if you do not see it, check the extension's options page.
+3. **Create a new shortcut:**
    - **Name:** `cookidoo`
-   - **Body / instructions:** copy the entire **Playbook** section from this README (everything from the `---` separator down to the bottom of the page) and paste it as the shortcut content. You can copy from the rendered README or the [raw view](https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md).
-   - **Argument handling:** if the shortcut form has an "accepts arguments" toggle, enable it. The user's input after `/cookidoo` is the recipe URL the playbook should fetch.
-4. **Save the shortcut.**
-5. **Use it.** In any Chrome tab (Cookidoo or otherwise) open the Claude Extension and type:
+   - **Body:** copy the entire **Playbook** section from this README (everything from the `---` separator down to the bottom of the page). Use the [raw README view](https://raw.githubusercontent.com/lucapinello/cookidoo-conversion/main/README.md) to copy without markdown rendering.
+   - **Arguments:** if the form has an "accepts arguments" toggle, enable it. Whatever you type after `/cookidoo` becomes the recipe URL the playbook fetches.
+4. **Save.**
+5. **Use it.** In any Chrome tab, open the extension and type `/cookidoo <recipe URL>`.
 
-   ```
-   /cookidoo https://www.example.com/some-recipe
-   ```
+If the shortcut UI does not currently support arguments, type `/cookidoo`, let it expand, then add a line like `Recipe to convert: <URL>` before sending.
 
-   Claude expands the shortcut, reads the recipe, plans the conversion, asks you to approve the plan, then drives the Cookidoo tab.
-
-If the shortcut UI does not currently support arguments, append the URL manually after the expansion: type `/cookidoo`, let it expand, then add a line like `Recipe to convert: <URL>` before sending.
-
-### Updating to the latest playbook
-
-When this repo is updated, Option A (URL fetch) always pulls the latest version automatically. Option B (saved shortcut) is a snapshot; re-paste the playbook into the shortcut to refresh.
+**Refreshing:** Option A always pulls the latest playbook from GitHub. Option B is a snapshot of whatever you pasted; if this repo is updated, re-copy the Playbook section into your shortcut to get the changes.
 
 ## Locale note
 
-This converter is hard-coded for **en-US**. Temperatures are entered in **Fahrenheit**, snapped to the en-US Cookidoo dropdown's fixed list. Source recipes in metric units (g, ml, °C) are accepted; their language is translated to English, but their numeric units are preserved (no auto-conversion of grams to ounces, etc.). Only temperatures are snapped to the en-US selectable list, and any snap is called out in the plan.
+This converter is hard-coded for **en-US**. Temperatures are entered in **Fahrenheit**, snapped to the en-US Cookidoo dropdown's fixed list. Source recipes in metric units (g, ml, °C) are accepted; their language is translated to English, but their numeric units are preserved (no auto-conversion of grams to ounces, etc.). Only temperatures are snapped to the en-US selectable list, and any snap is called out in the plan for your approval.
 
 ## Limitations
 
@@ -57,7 +93,7 @@ This converter is hard-coded for **en-US**. Temperatures are entered in **Fahren
 
 ## Playbook
 
-What follows is the full instruction set Claude executes. Copy everything below the separator into your `/cookidoo` shortcut body (or rely on Option A's URL fetch).
+The full instruction set Claude executes. Copy everything below the separator into your `/cookidoo` shortcut body, or rely on Option A's URL fetch.
 
 ---
 
